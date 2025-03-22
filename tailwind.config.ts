@@ -16,6 +16,7 @@ const config: Config = {
       fontFamily: {
         righteous: ['Righteous', 'cursive'],
         noto: ['Noto Sans', 'sans-serif'],
+        'moirai-one': ['Moirai One', 'sans-serif'],
       },
       colors: {
         'soft-blue': {
@@ -46,6 +47,7 @@ const config: Config = {
         fadeOut: 'fadeOut 0.5s ease-out',
         slideUp: 'slideUp 0.3s ease-out',
         slideDown: 'slideDown 0.3s ease-out',
+        fliker: 'flicker 5s infinite both',
       },
       keyframes: {
         shake: {
@@ -71,6 +73,15 @@ const config: Config = {
           '0%': { transform: 'translateY(-20px)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' },
         },
+        flicker: {
+          '0%': { opacity: '0.2' },
+          '10%': { opacity: '0.9' },
+          '20%': { opacity: '0.1' },
+          '30%': { opacity: '0.8' },
+          '40%': { opacity: '0.4' },
+          '50%': { opacity: '0.9' },
+          '100%': { opacity: '1' },
+        },
       },
     },
   },
@@ -80,7 +91,7 @@ const config: Config = {
       addUtilities({
         '.transition-hover:hover': {
           boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-          transition: 'all 0.2s ease-in-out 0.2s',
+          transition: 'all 0.15s ease-in-out 0.1s',
         },
       })
     }),

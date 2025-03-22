@@ -9,8 +9,8 @@ const notoSansKR = Noto_Sans_KR({
 })
 
 export const metadata: Metadata = {
-  title: 'MyOn · leeebug',
-  description: '인프런 워밍업 클럽 3기 풀스택 과제 4번 - MyOn',
+  title: 'MyOn · 나를 켜는 순간',
+  description: 'MyOn · 지금 나만의 순간을 기록해보세요.',
 }
 
 export default function RootLayout({
