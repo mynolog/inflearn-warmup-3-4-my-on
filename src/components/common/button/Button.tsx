@@ -16,7 +16,7 @@ export default function Button({
   return (
     <button
       type={type}
-      className={`w-32 h-10 bg-white rounded-lg font-bold shadow-lg transition-hover hover:translate-y-[-2px] ${className}`}
+      className={`h-10 w-32 rounded-lg bg-white font-bold shadow-lg transition-hover hover:translate-y-[-2px] ${className}`}
       onClick={onClick}
     >
       {children}

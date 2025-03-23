@@ -6,7 +6,7 @@ import { ROUTES } from '@/constants/routes'
 
 export default function AuthPage() {
   return (
-    <div className="w-full h-full flex flex-col gap-4 justify-evenly items-center">
+    <div className="flex h-full w-full flex-col items-center justify-evenly gap-4">
       <div className="flex flex-col items-center gap-6">
         <Logo className="text-8xl text-white shadow-2xl" />
         <Slogun />

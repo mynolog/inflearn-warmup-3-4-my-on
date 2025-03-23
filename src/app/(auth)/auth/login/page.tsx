@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import LoginForm from '@/components/auth/LoginForm'
 
 export const metadata: Metadata = {
   title: '로그인 · myOn',
@@ -6,5 +7,9 @@ export const metadata: Metadata = {
 }
 
 export default function LoginPage() {
-  return <div className="text-white">로그인 페이지</div>
+  return (
+    <div className="flex h-screen w-full flex-col items-center justify-center">
+      <LoginForm title="로그인" />
+    </div>
+  )
 }
