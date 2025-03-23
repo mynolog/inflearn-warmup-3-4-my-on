@@ -40,9 +40,23 @@ const config: Config = {
         'soft-violet': {
           400: '#9b59b6',
         },
+        kakao: {
+          container: '#FEE500',
+          symbol: '#000000',
+          label: '#000000',
+        },
+        github: {
+          container: '#24292E',
+          label: '#FFFFFF',
+        },
+        google: {
+          container: '#4285F4',
+          symbol: '#FFFFFF',
+          label: '#FFFFFF',
+        },
       },
       animation: {
-        shake: 'shake 0.4s ease-in-out',
+        shake: 'shake 0.3s ease-in-out',
         fadeIn: 'fadeIn 0.5s ease-out',
         fadeOut: 'fadeOut 0.5s ease-out',
         slideUp: 'slideUp 0.3s ease-out',
@@ -52,9 +66,9 @@ const config: Config = {
       keyframes: {
         shake: {
           '0%': { transform: 'translateX(0)' },
-          '25%': { transform: 'translateX(-4px)' },
-          '50%': { transform: 'translateX(4px)' },
-          '75%': { transform: 'translateX(-4px)' },
+          '25%': { transform: 'translateX(-2px)' },
+          '50%': { transform: 'translateX(2px)' },
+          '75%': { transform: 'translateX(-2px)' },
           '100%': { transform: 'translateX(0)' },
         },
         fadeIn: {

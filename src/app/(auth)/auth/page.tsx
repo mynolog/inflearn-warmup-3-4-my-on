@@ -13,10 +13,16 @@ export default function AuthPage() {
       </div>
       <div className="flex flex-col gap-3">
         <Link href={ROUTES.LOGIN}>
-          <Button className="w-48">로그인</Button>
+          <Button className="relative flex w-48 items-center justify-center gap-2">
+            <i className="fa-solid fa-arrow-right-to-bracket absolute left-7"></i>
+            <span>로그인</span>
+          </Button>
         </Link>
         <Link href={ROUTES.SIGNUP}>
-          <Button className="w-48">회원가입</Button>
+          <Button className="relative flex w-48 items-center justify-center gap-2">
+            <i className="fa-solid fa-user-plus absolute left-7"></i>
+            <span>회원가입</span>
+          </Button>
         </Link>
       </div>
     </div>
