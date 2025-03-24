@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import LoginForm from '@/components/auth/LoginForm'
 import AuthSwitcher from '@/components/auth/AuthSwitcher'
 import SocialLoginButtons from '@/components/auth/SocialLoginButtons'
-import AuthTransitionWrapper from '@/components/transition/AuthTransitionWrapper'
+import AuthPageWrapper from '@/components/transition/AuthTransitionWrapper'
 
 export const metadata: Metadata = {
   title: '로그인 · myOn',
@@ -11,12 +11,12 @@ export const metadata: Metadata = {
 
 export default function LoginPage() {
   return (
-    <AuthTransitionWrapper>
+    <AuthPageWrapper>
       <div className="flex h-screen w-full flex-col items-center justify-center gap-3">
         <LoginForm />
         <SocialLoginButtons />
         <AuthSwitcher to="signup" />
       </div>
-    </AuthTransitionWrapper>
+    </AuthPageWrapper>
   )
 }
