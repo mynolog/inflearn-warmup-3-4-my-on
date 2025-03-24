@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { SIDEBAR_LIST } from '@/constants/sidebarList'
 import Button from '../common/button/Button'
+import { createBrowserSupabaseClient } from '@/utils/supabase/client'
 
 export default function SidebarNav() {
   const pathname = usePathname()
@@ -11,6 +12,13 @@ export default function SidebarNav() {
   const secondaryList = SIDEBAR_LIST.filter((item) => item.group === 'secondary')
 
   const isActive = (href: string) => pathname === href
+
+  //TODO: 로그아웃 버튼은 별도 컴포넌트로 분리하여 재사용
+  const supabase = createBrowserSupabaseClient()
+
+  const handleSignout = async () => {
+    await supabase.auth.signOut()
+  }
 
   return (
     <nav className="relative flex min-h-screen w-full flex-col items-center justify-start gap-20 py-6">
@@ -54,7 +62,10 @@ export default function SidebarNav() {
           </li>
         ))}
       </ul>
-      <Button className="absolute bottom-6 flex !w-full items-center gap-2 px-3 text-gray-400 shadow-none hover:text-red-400">
+      <Button
+        onClick={handleSignout}
+        className="absolute bottom-6 flex !w-full items-center gap-2 px-3 text-gray-400 shadow-none hover:text-red-400"
+      >
         <i className="fa-solid fa-arrow-right-from-bracket"></i>
         <span className="hidden text-xs md:inline">로그아웃</span>
       </Button>
