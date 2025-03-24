@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Noto_Sans_KR } from 'next/font/google'
-import ReactQueryClientProvider from '@/providers/ReactQueryClientProvider'
+import Providers from '@/providers/Providers'
 import './globals.css'
 
 const notoSansKR = Noto_Sans_KR({
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   description: 'MyOn · 지금 나만의 순간을 기록해보세요.',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
@@ -30,9 +30,9 @@ export default function RootLayout({
           referrerPolicy="no-referrer"
         />
       </head>
-      <ReactQueryClientProvider>
+      <Providers>
         <body className={`${notoSansKR.className} antialiased`}>{children}</body>
-      </ReactQueryClientProvider>
+      </Providers>
     </html>
   )
 }
