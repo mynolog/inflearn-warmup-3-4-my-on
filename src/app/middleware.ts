@@ -3,8 +3,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import { ROUTES } from '@/constants/routes'
 
-console.log('aaa')
-
 export const applyMiddlewareSupabaseClient = async (request: NextRequest) => {
   // 변경되지 않은 응답을 생성
   let response = NextResponse.next({
