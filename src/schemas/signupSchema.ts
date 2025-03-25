@@ -6,7 +6,11 @@ export const signupSchema = z
     email: z.string().email({ message: SIGNUP_MESSAGE.EMAIL }),
     password: z.string().min(6, { message: SIGNUP_MESSAGE.PASSWORD }),
     passwordConfirm: z.string(),
-    nickname: z.string().min(2, { message: SIGNUP_MESSAGE.NICKNAME }),
+    nickname: z
+      .string()
+      .min(2, { message: SIGNUP_MESSAGE.NICKNAME.MIN_LENGTH })
+      .max(20, { message: SIGNUP_MESSAGE.NICKNAME.MAX_LENGTH })
+      .regex(/^[a-zA-Z0-9]+$/, { message: SIGNUP_MESSAGE.NICKNAME.REGEX }),
   })
   .refine((data) => data.password === data.passwordConfirm, {
     path: ['passwordConfirm'],

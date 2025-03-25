@@ -34,16 +34,8 @@ export default function SignupForm() {
     check: emailCheck,
     reset: emailReset,
   } = useDuplicationCheck(TABLES.USERS, 'email')
-  const {
-    status: nicknameStatus,
-    check: nicknameCheck,
-    reset: nicknameReset,
-  } = useDuplicationCheck(TABLES.USERS, 'nickname')
 
-  // nickname, email 업데이트 시 중복 검사 초기화
-  useEffect(() => {
-    nicknameReset()
-  }, [methods.watch('nickname')])
+  // email 업데이트 시 중복 검사 초기화
   useEffect(() => {
     emailReset()
   }, [methods.watch('email')])
@@ -74,33 +66,6 @@ export default function SignupForm() {
       toast.success(TOAST_MESSAGE.VALID.EMAIL_AVAILABLE)
     } else {
       toast.error(TOAST_MESSAGE.VALID.EMAIL_TAKEN)
-    }
-  }
-
-  const handleNicknameCheck = async () => {
-    methods.clearErrors('nickname')
-    const isValid = await methods.trigger('nickname')
-    if (!isValid) {
-      methods.setError('nickname', {
-        type: 'manual',
-        message: SIGNUP_MESSAGE.NICKNAME,
-      })
-      return
-    }
-    const nicknameInput = methods.getValues('nickname')
-    if (!nicknameInput.trim()) {
-      methods.setError('nickname', {
-        type: 'manual',
-        message: '닉네임을 입력해주세요.',
-      })
-      return
-    }
-
-    const isAvailable = await nicknameCheck(nicknameInput)
-    if (isAvailable) {
-      toast.success(TOAST_MESSAGE.VALID.NICKNAME_AVAILABLE)
-    } else {
-      toast.error(TOAST_MESSAGE.VALID.NICKNAME_TAKEN)
     }
   }
 
@@ -154,10 +119,6 @@ export default function SignupForm() {
   })
 
   const onSubmit = methods.handleSubmit((data) => {
-    if (!nicknameStatus.available) {
-      toast.warn('닉네임 중복 확인이 필요합니다.')
-      return
-    }
     if (!emailStatus.available) {
       toast.warn('이메일 중복 확인이 필요합니다.')
       return
@@ -187,14 +148,8 @@ export default function SignupForm() {
         <div className="flex w-full gap-2 pl-12 pr-10">
           <Input name="passwordConfirm" type="password" label="비밀번호 확인" />
         </div>
-        <div className="flex w-full items-end gap-2 pl-12 pr-10">
+        <div className="flex w-full gap-2 pl-12 pr-10">
           <Input name="nickname" label="닉네임" />
-          <Button
-            className={`w-14 bg-black text-xs text-white ${nicknameStatus.available && 'bg-mint-500'}`}
-            onClick={handleNicknameCheck}
-          >
-            {nicknameStatus.available ? <i className="fa-solid fa-check"></i> : '확인'}
-          </Button>
         </div>
 
         <Button

@@ -28,11 +28,11 @@ export default function Input({
     <div className="flex w-3/4 flex-col gap-2">
       {label && (
         <div className="flex items-center gap-1">
-          <label className="text-xs font-extrabold" htmlFor={name}>
+          <label className="text-[0.7rem] font-extrabold" htmlFor={name}>
             {label}
           </label>
           {error && (
-            <p className="animate-shake text-[0.65rem] font-semibold text-red-500">{error}</p>
+            <p className="animate-shake text-[0.55rem] font-semibold text-red-500">{error}</p>
           )}
         </div>
       )}
