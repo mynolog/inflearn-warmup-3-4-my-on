@@ -6,4 +6,6 @@ export const ROUTES = {
   SIGNUP: '/auth/signup',
 } as const
 
-export const API_ENDPOINTS = {} as const
+export const API_ENDPOINTS = {
+  CREATE_USER: 'api/user/create',
+} as const
