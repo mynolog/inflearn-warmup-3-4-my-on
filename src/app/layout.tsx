@@ -30,9 +30,9 @@ export default async function RootLayout({
           referrerPolicy="no-referrer"
         />
       </head>
-      <Providers>
-        <body className={`${notoSansKR.className} antialiased`}>{children}</body>
-      </Providers>
+      <body className={`${notoSansKR.className} antialiased`}>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   )
 }
