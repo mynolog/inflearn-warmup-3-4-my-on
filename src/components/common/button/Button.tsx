@@ -19,7 +19,7 @@ export default function Button({
   return (
     <button
       type={type}
-      className={`h-10 w-32 rounded-lg bg-white font-bold shadow-lg transition-hover hover:translate-y-[-2px] ${className}`}
+      className={`h-10 w-32 rounded-lg bg-white font-bold shadow-lg transition-hover hover:translate-y-[-2px] ${disabled ? 'cursor-not-allowed !bg-gray-300 hover:translate-y-0' : ''} ${className}`}
       disabled={disabled}
       onClick={onClick}
     >

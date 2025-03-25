@@ -7,6 +7,7 @@ interface InputProps {
   label?: string
   type?: 'text' | 'password'
   autoComplete?: 'current-password'
+  className?: string
 }
 
 export default function Input({
@@ -14,6 +15,7 @@ export default function Input({
   label,
   type = 'text',
   autoComplete = 'current-password',
+  className = '',
 }: InputProps) {
   const {
     register,
@@ -38,7 +40,7 @@ export default function Input({
         type={type}
         id={name}
         {...register(name)}
-        className={`rounded-lg border px-3 py-2 text-sm font-semibold outline-none transition-all duration-150 ease-in-out focus:shadow-md`}
+        className={`rounded-lg border px-3 py-2 text-sm font-semibold outline-none transition-all duration-150 ease-in-out focus:shadow-md ${className}`}
         autoComplete={autoComplete}
       />
     </div>
