@@ -48,8 +48,11 @@ export async function POST(request: NextRequest) {
   })
 
   if (error) {
-    return NextResponse.json({ error: error }, { status: 500 })
+    return NextResponse.json(
+      { message: ERROR_RESPONSE.DB_ERROR.message },
+      { status: ERROR_RESPONSE.DB_ERROR.status },
+    )
   }
-
-  return NextResponse.json({ message: 'ok' }, { status: 201 })
+  //TODO: 성공, 실패 분기 처리 고도화
+  return NextResponse.json({ message: '유저 생성 완료' }, { status: 201 })
 }
