@@ -1,6 +1,9 @@
 import type { CookieOptions } from '@supabase/ssr'
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
+import { ROUTES } from '@/constants/routes'
+
+console.log('aaa')
 
 export const applyMiddlewareSupabaseClient = async (request: NextRequest) => {
   // 변경되지 않은 응답을 생성
@@ -61,6 +64,26 @@ export const applyMiddlewareSupabaseClient = async (request: NextRequest) => {
     },
   })
 
+  // 세션 확인
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+
+  // NextRequest는 직접 수정 불가하여 복제 후 사용
+  const redirectUrl = request.nextUrl.clone()
+
+  // 비로그인 상태 -> 메인 페이지 접근 시 -> 로그인 페이지로 리다이렉트
+  if (request.nextUrl.pathname === ROUTES.HOME && !session) {
+    redirectUrl.pathname = ROUTES.LOGIN
+    return NextResponse.redirect(redirectUrl)
+  }
+
+  // 로그인 상태 -> /auth 세그먼트 접근 시 -> 메인 페이지로 리다이렉트
+  if (session && request.nextUrl.pathname.startsWith('/auth')) {
+    redirectUrl.pathname = ROUTES.HOME
+    return NextResponse.redirect(redirectUrl)
+  }
+
   // 인증 토큰 업데이트
   await supabase.auth.getUser()
 
@@ -73,13 +96,7 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * Feel free to modify this pattern to include more paths.
-     */
+    // 정적 파일 제외하고 모두 미들웨어 적용
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }
