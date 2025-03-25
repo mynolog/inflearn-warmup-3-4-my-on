@@ -1,8 +1,9 @@
 import { z } from 'zod'
+import { LOGIN_MESSAGE } from '@/constants/zod'
 
 export const loginSchema = z.object({
-  email: z.string().email({ message: '이메일 형식이 올바르지 않습니다.' }),
-  password: z.string().min(1, { message: '비밀번호를 입력해주세요.' }),
+  email: z.string().email({ message: LOGIN_MESSAGE.EMAIL }),
+  password: z.string().min(1, { message: LOGIN_MESSAGE.PASSWORD }),
 })
 
 export type LoginFormData = z.infer<typeof loginSchema>
