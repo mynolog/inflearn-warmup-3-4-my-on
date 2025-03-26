@@ -35,14 +35,16 @@ export default function SignupForm() {
     reset: emailReset,
   } = useDuplicationCheck(TABLES.USERS, 'email')
 
-  // email 업데이트 시 중복 검사 초기화
+  const watchEmail = methods.watch('email')
+
+  // email 업데이트 시 중복 검증 초기화
   useEffect(() => {
     emailReset()
-  }, [methods.watch('email')])
+  }, [watchEmail, emailReset])
 
   const handleEmailCheck = async () => {
     methods.clearErrors('email')
-
+    // zod 스키마 유효성 검증 트리거
     const isValid = await methods.trigger('email')
     if (!isValid) {
       methods.setError('email', {
@@ -136,7 +138,7 @@ export default function SignupForm() {
         <div className="flex w-full items-end gap-2 pl-12 pr-10">
           <Input name="email" label="이메일" className="flex-1" />
           <Button
-            className={`w-14 bg-black text-xs text-white ${emailStatus.available && 'bg-mint-500'}`}
+            className={`!w-14 !bg-gray-800 text-xs text-white ${emailStatus.available && '!bg-mint-500'}`}
             onClick={handleEmailCheck}
           >
             {emailStatus.available ? <i className="fa-solid fa-check"></i> : '확인'}
@@ -154,7 +156,7 @@ export default function SignupForm() {
 
         <Button
           type="submit"
-          className="!w-3/4 bg-mint-900 font-bold text-white"
+          className="!w-3/4 !bg-mint-900 font-bold text-white"
           disabled={signupMutation.isPending}
         >
           {isEmailVerified ? '메일함을 확인해주세요' : '가입하기'}

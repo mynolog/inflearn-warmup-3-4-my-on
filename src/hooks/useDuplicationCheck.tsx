@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { createBrowserSupabaseClient } from '@/utils/supabase/client'
 
 interface DuplicationStatus {
@@ -30,13 +30,13 @@ export const useDuplicationCheck = (table: string, column: string) => {
     return !data
   }
 
-  const reset = () => {
+  const reset = useCallback(() => {
     setStatus({
       checked: false,
       available: null,
       loading: false,
     })
-  }
+  }, [])
 
   return { status, check, reset }
 }
