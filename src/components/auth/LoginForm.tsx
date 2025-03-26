@@ -64,7 +64,7 @@ export default function LoginForm() {
         <Input type="password" name="password" label="비밀번호" />
         <Button
           type="submit"
-          className="!w-3/4 bg-mint-900 font-bold text-white"
+          className="!w-3/4 !bg-mint-900 font-bold text-white"
           disabled={loginMutation.isPending}
         >
           {loginMutation.isPending ? '로그인 중' : '로그인'}

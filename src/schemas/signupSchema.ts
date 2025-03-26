@@ -10,7 +10,7 @@ export const signupSchema = z
       .string()
       .min(2, { message: SIGNUP_MESSAGE.NICKNAME.MIN_LENGTH })
       .max(20, { message: SIGNUP_MESSAGE.NICKNAME.MAX_LENGTH })
-      .regex(/^[a-zA-Z0-9]+$/, { message: SIGNUP_MESSAGE.NICKNAME.REGEX }),
+      .regex(/^[가-힣a-zA-Z0-9]+$/, { message: SIGNUP_MESSAGE.NICKNAME.REGEX }),
   })
   .refine((data) => data.password === data.passwordConfirm, {
     path: ['passwordConfirm'],

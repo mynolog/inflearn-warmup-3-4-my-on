@@ -63,12 +63,7 @@ export default function SignupForm() {
       return
     }
 
-    const isAvailable = await emailCheck(emailInput)
-    if (isAvailable) {
-      toast.success(TOAST_MESSAGE.VALID.EMAIL_AVAILABLE)
-    } else {
-      toast.error(TOAST_MESSAGE.VALID.EMAIL_TAKEN)
-    }
+    await emailCheck(emailInput)
   }
 
   const signupMutation = useMutation({
@@ -97,8 +92,9 @@ export default function SignupForm() {
           id,
           email,
           nickname,
+          provider: 'email',
         }
-        await kyInstance.post(API_ENDPOINTS.CREATE_USER, {
+        await kyInstance.post(API_ENDPOINTS.EMAIL_USER_REGISTER, {
           json: payload,
         })
       }

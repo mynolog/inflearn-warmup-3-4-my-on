@@ -4,7 +4,7 @@ export const SIGNUP_MESSAGE = {
   NICKNAME: {
     MIN_LENGTH: '닉네임은 최소 2자 이상이어야 합니다.',
     MAX_LENGTH: '닉네임은 최대 20자까지 가능합니다.',
-    REGEX: '닉네임은 영문 또는 숫자만 허용됩니다.',
+    REGEX: '닉네임은 영문, 한글 또는 숫자만 허용됩니다.',
   },
   PASSWORD_CONFIRM: '비밀번호가 일치하지 않습니다.',
 }

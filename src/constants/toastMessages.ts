@@ -11,8 +11,10 @@ export const TOAST_MESSAGE = {
   },
   VALID: {
     EMAIL_AVAILABLE: '사용 가능한 이메일입니다.',
-    EMAIL_TAKEN: '이미 사용 중인 이메일입니다.',
     NICKNAME_AVAILABLE: '사용 가능한 닉네임입니다.',
+
+    EMAIL_TAKEN: '이미 사용 중인 이메일입니다.',
+    KAKAO_EMAIL_TAKEN: '카카오 계정으로 가입된 이메일입니다. Kakao로 시작하기로 로그인해주세요.',
     NICKNAME_TAKEN: '이미 사용 중인 닉네임입니다.',
   },
   SYSTEM: {

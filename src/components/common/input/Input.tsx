@@ -40,7 +40,7 @@ export default function Input({
         type={type}
         id={name}
         {...register(name)}
-        className={`rounded-lg border px-3 py-2 text-sm font-semibold outline-none transition-all duration-150 ease-in-out focus:shadow-md ${className}`}
+        className={`rounded-lg border p-3 text-xs font-extrabold outline-none transition-all duration-150 ease-in-out focus:shadow-md ${className}`}
         autoComplete={autoComplete}
       />
     </div>
