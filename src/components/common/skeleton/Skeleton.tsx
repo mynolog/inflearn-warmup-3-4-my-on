@@ -9,7 +9,7 @@ interface SkeletonProps {
 }
 
 export default function Skeleton({
-  width = '100%',
+  width,
   height,
   aspectRatio,
   className = '',
@@ -17,11 +17,9 @@ export default function Skeleton({
 }: SkeletonProps) {
   return (
     <div
-      className={`animate-pulse bg-gray-200 ${borderRadius} ${
-        aspectRatio ? `aspect-[${aspectRatio}]` : ''
-      } ${className}`}
+      className={`animate-pulse bg-gray-100 ${borderRadius} ${aspectRatio ? `aspect-[${aspectRatio}]` : ''} ${className}`}
       style={{
-        width,
+        width: aspectRatio ? (width ?? '100%') : width,
         height: aspectRatio ? undefined : height,
       }}
     />

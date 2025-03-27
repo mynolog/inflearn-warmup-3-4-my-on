@@ -70,8 +70,10 @@ export const applyMiddlewareSupabaseClient = async (request: NextRequest) => {
   // NextRequest는 직접 수정 불가하여 복제 후 사용
   const redirectUrl = request.nextUrl.clone()
 
-  // 비로그인 상태 -> 메인 페이지 접근 시 -> 로그인 페이지로 리다이렉트
-  if (request.nextUrl.pathname === ROUTES.HOME && !session) {
+  const protectedRoutes = ['/', '/direct-message']
+
+  // 비로그인 상태 -> 보호된 라우트로 접근 시 -> 로그인 페이지로 리다이렉트
+  if (protectedRoutes.includes(request.nextUrl.pathname) && !session) {
     redirectUrl.pathname = ROUTES.LOGIN
     return NextResponse.redirect(redirectUrl)
   }

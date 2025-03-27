@@ -55,7 +55,7 @@ export const SIDEBAR_LIST: SidebarItem[] = [
   {
     id: 5000,
     label: '메시지',
-    href: '#',
+    href: ROUTES.DIRECT_MESSAGE,
     iconClass: {
       default: 'fa-regular fa-paper-plane',
       active: 'fa-solid fa-paper-plane',

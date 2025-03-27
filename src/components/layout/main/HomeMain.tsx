@@ -23,7 +23,7 @@ export default function HomeMain() {
       {nickname ? <h1>{nickname}님, 환영합니다!</h1> : <Skeleton width="300px" height="40px" />}
       <Button
         onClick={handleSignout}
-        className="flex items-center gap-2 bg-red-400 px-3 text-white shadow-none hover:text-white"
+        className="flex items-center gap-2 !bg-red-400 px-3 text-white shadow-none hover:text-white"
       >
         <i className="fa-solid fa-arrow-right-from-bracket text-lg"></i>
         <span className="hidden text-sm md:inline">로그아웃</span>
