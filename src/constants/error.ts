@@ -10,6 +10,9 @@ export const ERROR_RESPONSE = {
   // 유저 회원가입 중복 에러
   EMAIL_TAKEN: { status: 409, message: '이미 사용 중인 이메일입니다.' },
   NICKNAME_TAKEN: { status: 409, message: '이미 사용 중인 닉네임입니다.' },
+
+  // 유저 조회 에러
+  USER_NOT_FOUND: { status: 404, message: '유저를 찾을 수 없습니다.' },
 } as const
 
 export const CONFIG_ERROR = {

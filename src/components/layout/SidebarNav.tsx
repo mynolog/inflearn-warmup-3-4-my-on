@@ -5,9 +5,11 @@ import { usePathname } from 'next/navigation'
 import { SIDEBAR_LIST } from '@/constants/sidebarList'
 import Button from '../common/button/Button'
 import { createBrowserSupabaseClient } from '@/utils/supabase/client'
+import { useUserStore } from '@/stores/useUserStore'
 
 export default function SidebarNav() {
   const pathname = usePathname()
+  const { clearUser } = useUserStore()
   const primaryList = SIDEBAR_LIST.filter((item) => item.group === 'primary')
   const secondaryList = SIDEBAR_LIST.filter((item) => item.group === 'secondary')
 
@@ -17,6 +19,7 @@ export default function SidebarNav() {
   const supabase = createBrowserSupabaseClient()
 
   const handleSignout = async () => {
+    clearUser()
     await supabase.auth.signOut()
   }
 
