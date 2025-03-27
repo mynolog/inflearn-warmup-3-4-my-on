@@ -72,6 +72,7 @@ export default function SignupForm() {
         email,
         password,
         options: {
+          //TODO: 환경 변수 에러 핸들링 추가
           emailRedirectTo: process.env.NEXT_PUBLIC_REDIRECT_URL,
           data: {
             nickname,

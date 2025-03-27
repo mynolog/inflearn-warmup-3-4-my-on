@@ -4,6 +4,7 @@ import { createServerSupabaseClient } from '@/utils/supabase/server'
 import { TABLES } from '@/constants/supabase'
 import { ERROR_RESPONSE } from '@/constants/error'
 import { generateRandomSuffix } from '@/utils/random'
+import { adminSupabase } from '@/utils/supabase/admin'
 
 export async function POST(request: NextRequest) {
   const supabase = await createServerSupabaseClient()
@@ -47,7 +48,7 @@ export async function POST(request: NextRequest) {
   }
 
   // email 중복 없으면 users 테이블에 데이터 추가
-  const { error } = await supabase.from(TABLES.USERS).insert({
+  const { error } = await adminSupabase.from(TABLES.USERS).insert({
     id,
     email,
     nickname,
@@ -57,6 +58,7 @@ export async function POST(request: NextRequest) {
   })
 
   if (error) {
+    console.error('[DB INSERT ERROR]', error)
     return NextResponse.json(
       { message: ERROR_RESPONSE.DB_ERROR.message },
       { status: ERROR_RESPONSE.DB_ERROR.status },

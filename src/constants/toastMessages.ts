@@ -7,14 +7,14 @@ export const TOAST_MESSAGE = {
     LOGIN_FAILED: '이메일 또는 비밀번호가 일치하지 않습니다.',
 
     EMAIL_NOT_VERIFIED: '이메일 인증이 필요합니다.',
-    SIGNUP_EMAIL_SENT: '이메일 인증 링크가 전송되었습니다. 메일함을 확인해주세요.',
+    SIGNUP_EMAIL_SENT: '이메일 인증 링크가 발송되었습니다.',
   },
   VALID: {
     EMAIL_AVAILABLE: '사용 가능한 이메일입니다.',
     NICKNAME_AVAILABLE: '사용 가능한 닉네임입니다.',
 
     EMAIL_TAKEN: '이미 사용 중인 이메일입니다.',
-    KAKAO_EMAIL_TAKEN: '카카오 계정으로 가입된 이메일입니다. Kakao로 시작하기로 로그인해주세요.',
+    KAKAO_EMAIL_TAKEN: 'Kakao 계정으로 가입된 이메일입니다.',
     NICKNAME_TAKEN: '이미 사용 중인 닉네임입니다.',
   },
   SYSTEM: {

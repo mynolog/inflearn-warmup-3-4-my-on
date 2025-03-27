@@ -4,6 +4,7 @@ import { createServerSupabaseClient } from '@/utils/supabase/server'
 import { TABLES } from '@/constants/supabase'
 import { ERROR_RESPONSE } from '@/constants/error'
 import { generateRandomSuffix } from '@/utils/random'
+import { adminSupabase } from '@/utils/supabase/admin'
 
 export async function POST(request: NextRequest) {
   const supabase = await createServerSupabaseClient()
@@ -48,8 +49,18 @@ export async function POST(request: NextRequest) {
       username = `${baseUsername}-${suffix}`
     }
 
+    const { data: existingUser } = await supabase
+      .from(TABLES.USERS)
+      .select('id')
+      .eq('id', id)
+      .maybeSingle()
+
+    if (existingUser) {
+      return NextResponse.json({ message: '이미 등록된 유저입니다.' }, { status: 200 })
+    }
+
     // email 중복 없으면 users 테이블에 데이터 추가
-    const { error } = await supabase.from(TABLES.USERS).insert({
+    const { error } = await adminSupabase.from(TABLES.USERS).insert({
       id,
       email,
       nickname,

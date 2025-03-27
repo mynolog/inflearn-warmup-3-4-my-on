@@ -10,6 +10,7 @@ export default function SocialLoginButtons() {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'kakao',
       options: {
+        //TODO: kakao callback url 환경 변수로 관리
         redirectTo: process.env.NEXT_PUBLIC_VERCEL_URL
           ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/auth/oauth/kakao/callback`
           : 'http://localhost:3000/auth/oauth/kakao/callback',
@@ -29,7 +30,10 @@ export default function SocialLoginButtons() {
         <i className="fa-solid fa-comment text-kakao-symbol"></i>
         <span className="text-kakao-label">Kakao로 시작하기</span>
       </Button>
-      <Button className="flex !w-3/4 items-center justify-center gap-2 !bg-google-container">
+      <Button
+        disabled
+        className="flex !w-3/4 items-center justify-center gap-2 !bg-google-container"
+      >
         <i className="fa-brands fa-google text-google-symbol"></i>
         <span className="text-google-label">Google로 시작하기</span>
       </Button>
