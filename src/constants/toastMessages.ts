@@ -8,6 +8,8 @@ export const TOAST_MESSAGE = {
 
     EMAIL_NOT_VERIFIED: '이메일 인증이 필요합니다.',
     SIGNUP_EMAIL_SENT: '이메일 인증 링크가 발송되었습니다.',
+
+    UNKNWON_ERROR: '알 수 없는 오류가 발생했습니다.',
   },
   VALID: {
     EMAIL_AVAILABLE: '사용 가능한 이메일입니다.',
