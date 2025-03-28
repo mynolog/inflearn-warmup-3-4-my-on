@@ -1,11 +1,62 @@
 'use client'
 
-import Image from 'next/image'
+import type { RoomResponse } from '@/types/dto/room'
+import { useEffect, useState } from 'react'
 import { useUsers } from '@/hooks/useUsers'
 import Skeleton from '../common/skeleton/Skeleton'
+import { generateRoomId } from '@/utils/random'
+import { useUserStore } from '@/stores/useUserStore'
+import { kyInstance } from '@/lib/kyInstance'
+import DirectMessageItem from './DirectMessageItem'
 
 export default function DirectMessageList() {
+  const { id: currentUserId, username: currentUsername } = useUserStore()
   const { data: users, isLoading, isError } = useUsers()
+  const [roomLinks, setRoomLinks] = useState<
+    { userId: string; roomId: string; isExisting: boolean }[]
+  >([])
+
+  useEffect(() => {
+    if (!currentUserId || !currentUsername || !users) return
+
+    const fetchRooms = async () => {
+      const results = await Promise.all(
+        users.map(async (user) => {
+          const searchParams = new URLSearchParams({
+            currentUserId,
+            targetUserId: user.id,
+          })
+
+          const res = await kyInstance.get(`api/rooms?${searchParams}`)
+          const { room }: RoomResponse = await res.json()
+
+          let roomId: string
+          let isExisting = false
+
+          if (room) {
+            roomId = room.id
+            isExisting = true
+          } else {
+            const payload = {
+              usernameA: currentUsername,
+              usernameB: user.username,
+            }
+            roomId = generateRoomId(payload)
+            isExisting = false
+          }
+
+          return {
+            userId: user.id,
+            roomId,
+            isExisting,
+          }
+        }),
+      )
+
+      setRoomLinks(results)
+    }
+    fetchRooms()
+  }, [currentUserId, currentUsername, users])
 
   return (
     <div className="flex w-full flex-col gap-3">
@@ -28,23 +79,12 @@ export default function DirectMessageList() {
               </li>
             ))
           ) : users && users.length > 0 ? (
-            users.map((user) => (
-              <li key={user.id} className="flex w-full items-center gap-5">
-                <div className="mx-auto h-12 w-12 overflow-hidden rounded-full md:mx-0">
-                  <Image
-                    src={user.avatar_url}
-                    width={48}
-                    height={48}
-                    alt={user.nickname}
-                    style={{ objectFit: 'cover' }}
-                  />
-                </div>
-                <div className="flex flex-1 flex-col gap-1">
-                  <span className="hidden text-sm font-semibold md:inline">{user.nickname}</span>
-                  <span className="hidden text-xs text-gray-600 md:inline">마지막 메시지</span>
-                </div>
-              </li>
-            ))
+            users.map((user) => {
+              const matchedRoom = roomLinks.find((room) => room.userId === user.id)
+              const roomId = matchedRoom?.roomId
+
+              return <DirectMessageItem key={user.id} user={user} roomId={roomId} />
+            })
           ) : (
             <li className="text-sm text-gray-500">표시할 유저가 없습니다.</li>
           )}

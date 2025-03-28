@@ -15,6 +15,7 @@ export default function MyProfilePreview() {
               src={avatarUrl}
               width={56}
               height={56}
+              priority
               alt={nickname}
               style={{ objectFit: 'cover' }}
             />

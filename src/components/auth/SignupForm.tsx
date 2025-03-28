@@ -87,6 +87,7 @@ export default function SignupForm() {
         setIsEmailVerified(true)
       }
 
+      //TODO: useRegisterUser 훅 사용하여 로직 분리하기
       if (data && data.user) {
         const { id } = data.user
         const payload: CreateUserDTO = {

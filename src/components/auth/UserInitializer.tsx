@@ -14,11 +14,13 @@ export default function UserInitializer() {
     const fetchUser = async () => {
       try {
         const {
+          id,
           nickname,
           username,
           avatar_url: avatarUrl,
         } = await kyInstance.get(API_ENDPOINTS.USER_PROFILE).json<UserResponseDTO>()
         setUser({
+          id,
           nickname,
           username,
           avatarUrl,
