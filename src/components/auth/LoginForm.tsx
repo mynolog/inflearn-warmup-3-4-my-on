@@ -13,11 +13,9 @@ import { createBrowserSupabaseClient } from '@/utils/supabase/client'
 import { ROUTES } from '@/constants/routes'
 import { toast } from 'react-toastify'
 import { TOAST_MESSAGE } from '@/constants/toastMessages'
-import { useUserStore } from '@/stores/useUserStore'
 
 export default function LoginForm() {
   const router = useRouter()
-  const { setUser } = useUserStore()
   const methods = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     mode: 'onSubmit',

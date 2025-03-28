@@ -1,6 +1,6 @@
 'use client'
 
-import type { RoomResponse } from '@/types/dto/room'
+import type { LastMessage, RoomResponse } from '@/types/dto/room'
 import { useEffect, useState } from 'react'
 import { useUsers } from '@/hooks/useUsers'
 import Skeleton from '../common/skeleton/Skeleton'
@@ -8,12 +8,13 @@ import { generateRoomId } from '@/utils/random'
 import { useUserStore } from '@/stores/useUserStore'
 import { kyInstance } from '@/lib/kyInstance'
 import DirectMessageItem from './DirectMessageItem'
+import { API_ENDPOINTS } from '@/constants/routes'
 
 export default function DirectMessageList() {
   const { id: currentUserId, username: currentUsername } = useUserStore()
   const { data: users, isLoading, isError } = useUsers()
   const [roomLinks, setRoomLinks] = useState<
-    { userId: string; roomId: string; isExisting: boolean }[]
+    { userId: string; roomId: string; isExisting: boolean; lastMessage: string | null }[]
   >([])
 
   useEffect(() => {
@@ -27,15 +28,16 @@ export default function DirectMessageList() {
             targetUserId: user.id,
           })
 
-          const res = await kyInstance.get(`api/rooms?${searchParams}`)
+          const res = await kyInstance.get(`${API_ENDPOINTS.ROOMS}?${searchParams}`)
           const { room }: RoomResponse = await res.json()
-
           let roomId: string
           let isExisting = false
+          let lastMessage: string | null = null
 
           if (room) {
             roomId = room.id
             isExisting = true
+            lastMessage = room.last_message?.content ?? null
           } else {
             const payload = {
               usernameA: currentUsername,
@@ -49,6 +51,7 @@ export default function DirectMessageList() {
             userId: user.id,
             roomId,
             isExisting,
+            lastMessage,
           }
         }),
       )
@@ -57,6 +60,10 @@ export default function DirectMessageList() {
     }
     fetchRooms()
   }, [currentUserId, currentUsername, users])
+
+  useEffect(() => {
+    console.log(roomLinks)
+  }, [roomLinks])
 
   return (
     <div className="flex w-full flex-col gap-3">
@@ -82,8 +89,16 @@ export default function DirectMessageList() {
             users.map((user) => {
               const matchedRoom = roomLinks.find((room) => room.userId === user.id)
               const roomId = matchedRoom?.roomId
+              const lastMessagePreview = matchedRoom?.lastMessage ?? ''
 
-              return <DirectMessageItem key={user.id} user={user} roomId={roomId} />
+              return (
+                <DirectMessageItem
+                  key={user.id}
+                  user={user}
+                  roomId={roomId}
+                  lastMessagePreview={lastMessagePreview}
+                />
+              )
             })
           ) : (
             <li className="text-sm text-gray-500">표시할 유저가 없습니다.</li>
