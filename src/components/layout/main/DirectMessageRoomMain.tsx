@@ -20,15 +20,20 @@ interface DirectMessageRoomMainProps {
 export default function DirectMessageRoomMain({ roomId }: DirectMessageRoomMainProps) {
   const { id: currentUserId } = useUserStore()
   const { targetUserId } = useDirectMessageStore()
-  const [messages, setMessages] = useState<MessageResponseDTO[]>()
+  const [messages, setMessages] = useState<MessageResponseDTO[]>([])
   const bottomRef = useRef<HTMLDivElement | null>(null)
 
   const scrollToBottom = () => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
+  const isFirstLoad = useRef(true)
 
   useEffect(() => {
-    scrollToBottom()
+    // 첫 번째 로딩 시에도 스크롤을 맨 아래로 이동
+    if (isFirstLoad.current && messages.length > 0) {
+      scrollToBottom()
+      isFirstLoad.current = false
+    }
   }, [messages])
 
   useEffect(() => {
@@ -71,14 +76,35 @@ export default function DirectMessageRoomMain({ roomId }: DirectMessageRoomMainP
       .on(
         'postgres_changes',
         {
-          event: 'INSERT',
+          event: '*',
           schema: 'public',
           table: TABLES.MESSAGES,
           filter: `room_id=eq.${roomId}`,
         },
         (payload) => {
-          const newMessage = payload.new as MessageResponseDTO
-          setMessages((prev) => [...(prev || []), newMessage])
+          const updatedMessage = payload.new as MessageResponseDTO
+
+          setMessages((prev) => {
+            if (!prev) return [updatedMessage]
+
+            const exists = prev.find((msg) => msg.id === updatedMessage.id)
+
+            // 이미 있는 메시지면 -> 교체 (갱신)
+            if (exists) {
+              return prev
+                .map((msg) => (msg.id === updatedMessage.id ? updatedMessage : msg))
+                .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+            }
+
+            // 새로운 메시지면 -> 추가
+            return [...prev, updatedMessage].sort(
+              (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
+            )
+          })
+          // 메시지 추가 시에만 적용
+          if (payload.eventType === 'INSERT') {
+            scrollToBottom()
+          }
         },
       )
       .subscribe()
@@ -88,6 +114,10 @@ export default function DirectMessageRoomMain({ roomId }: DirectMessageRoomMainP
     }
   }, [roomId])
 
+  const handleDeleteMessage = async (messageId: string) => {
+    await kyInstance.patch(`${API_ENDPOINTS.MESSAGE}/${messageId}`)
+  }
+
   return (
     <main className="flex h-screen w-full flex-col">
       <ul className="flex-1 space-y-5 overflow-y-auto px-3 py-4">
@@ -95,6 +125,7 @@ export default function DirectMessageRoomMain({ roomId }: DirectMessageRoomMainP
           message.sender_id === currentUserId ? (
             <li key={message.id} className="group flex items-center justify-end gap-2">
               <Button
+                onClick={() => handleDeleteMessage(message.id)}
                 className={`hidden !h-5 !w-5 group-hover:inline-block ${message.is_deleted && 'group-hover:hidden'}`}
               >
                 <i className="fa-solid fa-trash text-sm text-red-400"></i>
@@ -127,7 +158,7 @@ export default function DirectMessageRoomMain({ roomId }: DirectMessageRoomMainP
             </li>
           ),
         )}
-        <div ref={bottomRef} />
+        <div className="pb-14" ref={bottomRef} />
       </ul>
 
       <div className="border-t px-4 py-3">

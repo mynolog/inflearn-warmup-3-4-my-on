@@ -18,4 +18,5 @@ export const API_ENDPOINTS = {
 
   ROOMS: 'api/rooms',
   MESSAGES: 'api/messages',
+  MESSAGE: 'api/message',
 } as const
