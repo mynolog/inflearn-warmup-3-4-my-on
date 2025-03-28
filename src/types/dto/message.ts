@@ -7,3 +7,9 @@ export interface MessageResponseDTO {
   is_read: boolean
   created_at: string
 }
+
+export interface CreateMessageRequestDTO {
+  content: string
+  room_id: string
+  sender_id: string
+}

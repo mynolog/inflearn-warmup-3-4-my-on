@@ -73,7 +73,12 @@ export const applyMiddlewareSupabaseClient = async (request: NextRequest) => {
   const protectedRoutes = ['/', '/direct-message']
 
   // 비로그인 상태 -> 보호된 라우트로 접근 시 -> 로그인 페이지로 리다이렉트
-  if (protectedRoutes.includes(request.nextUrl.pathname) && !session) {
+  const isProtectedRoute = protectedRoutes.some(
+    (route) =>
+      request.nextUrl.pathname === route || request.nextUrl.pathname.startsWith(`${route}/`),
+  )
+
+  if (isProtectedRoute && !session) {
     redirectUrl.pathname = ROUTES.LOGIN
     return NextResponse.redirect(redirectUrl)
   }

@@ -9,6 +9,9 @@ import { useUserStore } from '@/stores/useUserStore'
 import { kyInstance } from '@/lib/kyInstance'
 import DirectMessageItem from './DirectMessageItem'
 import { API_ENDPOINTS } from '@/constants/routes'
+import { createBrowserSupabaseClient } from '@/utils/supabase/client'
+import { TABLES } from '@/constants/supabase'
+import { MessageResponseDTO } from '@/types/dto/message'
 
 export default function DirectMessageList() {
   const { id: currentUserId, username: currentUsername } = useUserStore()
@@ -62,7 +65,37 @@ export default function DirectMessageList() {
   }, [currentUserId, currentUsername, users])
 
   useEffect(() => {
-    console.log(roomLinks)
+    if (!roomLinks.length) return
+    const supabase = createBrowserSupabaseClient()
+
+    const channels = roomLinks.map((room) => {
+      return supabase
+        .channel(`direct-messages-${room.roomId}`)
+        .on(
+          'postgres_changes',
+          {
+            event: 'INSERT',
+            schema: 'public',
+            table: TABLES.MESSAGES,
+            filter: `room_id=eq.${room.roomId}`,
+          },
+          (payload) => {
+            const newMessage = payload.new as MessageResponseDTO
+            setRoomLinks((prev) =>
+              prev.map((item) =>
+                item.roomId === newMessage.room_id
+                  ? { ...item, lastMessage: newMessage.content }
+                  : item,
+              ),
+            )
+          },
+        )
+        .subscribe()
+    })
+
+    return () => {
+      channels.forEach((channel) => supabase.removeChannel(channel))
+    }
   }, [roomLinks])
 
   return (
