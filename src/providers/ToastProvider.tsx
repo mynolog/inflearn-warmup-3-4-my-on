@@ -6,9 +6,8 @@ export default function ToastProvider() {
   return (
     <ToastContainer
       position="top-center"
-      autoClose={3000}
+      autoClose={5000}
       hideProgressBar
-      newestOnTop
       closeOnClick
       rtl={false}
       pauseOnFocusLoss
@@ -17,6 +16,7 @@ export default function ToastProvider() {
       theme="colored"
       transition={Slide}
       className="text-sm font-semibold"
+      stacked
     />
   )
 }

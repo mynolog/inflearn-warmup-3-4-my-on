@@ -12,6 +12,7 @@ import { createBrowserSupabaseClient } from '@/utils/supabase/client'
 import { TABLES } from '@/constants/supabase'
 import { formatToKoreanTime } from '@/utils/format'
 import Button from '@/components/common/button/Button'
+import { toast } from 'react-toastify'
 
 interface DirectMessageRoomMainProps {
   roomId: string
@@ -22,14 +23,25 @@ export default function DirectMessageRoomMain({ roomId }: DirectMessageRoomMainP
   const { targetUserId } = useDirectMessageStore()
   const [messages, setMessages] = useState<MessageResponseDTO[]>([])
   const bottomRef = useRef<HTMLDivElement | null>(null)
+  const scrollContainerRef = useRef<HTMLUListElement | null>(null)
+  const userIdRef = useRef<string | null>(null)
+  userIdRef.current = currentUserId
 
   const scrollToBottom = () => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
   const isFirstLoad = useRef(true)
 
+  const isAtBottom = () => {
+    const container = scrollContainerRef.current
+    if (!container) return true
+    const threshold = 50
+    const position = container.scrollTop + container.clientHeight
+    const height = container.scrollHeight
+    return height - position < threshold
+  }
+
   useEffect(() => {
-    // 첫 번째 로딩 시에도 스크롤을 맨 아래로 이동
     if (isFirstLoad.current && messages.length > 0) {
       scrollToBottom()
       isFirstLoad.current = false
@@ -37,9 +49,7 @@ export default function DirectMessageRoomMain({ roomId }: DirectMessageRoomMainP
   }, [messages])
 
   useEffect(() => {
-    if (!currentUserId || !targetUserId) {
-      return
-    }
+    if (!currentUserId || !targetUserId) return
 
     const fetchRoomAndMessage = async () => {
       try {
@@ -52,9 +62,7 @@ export default function DirectMessageRoomMain({ roomId }: DirectMessageRoomMainP
             userA_id: currentUserId,
             userB_id: targetUserId,
           }
-          await kyInstance.post(API_ENDPOINTS.ROOMS, {
-            json: payload,
-          })
+          await kyInstance.post(API_ENDPOINTS.ROOMS, { json: payload })
         } else {
           const res = await kyInstance.get(`${API_ENDPOINTS.MESSAGES}/${roomId}`)
           const { messages }: { messages: MessageResponseDTO[] } = await res.json()
@@ -86,24 +94,32 @@ export default function DirectMessageRoomMain({ roomId }: DirectMessageRoomMainP
 
           setMessages((prev) => {
             if (!prev) return [updatedMessage]
-
             const exists = prev.find((msg) => msg.id === updatedMessage.id)
-
-            // 이미 있는 메시지면 -> 교체 (갱신)
             if (exists) {
               return prev
                 .map((msg) => (msg.id === updatedMessage.id ? updatedMessage : msg))
                 .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
             }
-
-            // 새로운 메시지면 -> 추가
             return [...prev, updatedMessage].sort(
               (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
             )
           })
-          // 메시지 추가 시에만 적용
+
+          const isOwn = updatedMessage.sender_id === userIdRef.current
           if (payload.eventType === 'INSERT') {
-            scrollToBottom()
+            if (isOwn) {
+              scrollToBottom()
+            } else {
+              if (!isAtBottom()) {
+                toast.info(`새 메시지: ${updatedMessage.content}`, {
+                  position: 'top-right',
+                  theme: 'dark',
+                  onClick: () => scrollToBottom(),
+                })
+              } else {
+                scrollToBottom()
+              }
+            }
           }
         },
       )
@@ -120,7 +136,10 @@ export default function DirectMessageRoomMain({ roomId }: DirectMessageRoomMainP
 
   return (
     <main className="flex h-screen w-full flex-col">
-      <ul className="flex-1 space-y-5 overflow-y-auto px-3 py-4">
+      <ul
+        ref={scrollContainerRef}
+        className="chat-scrollable flex-1 space-y-5 overflow-y-auto px-3 py-4"
+      >
         {messages?.map((message) =>
           message.sender_id === currentUserId ? (
             <li key={message.id} className="group flex items-center justify-end gap-2">
