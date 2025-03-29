@@ -117,15 +117,16 @@ pnpm run dev
 
 ### ⚡ 트러블 슈팅
 
-| 이슈/버그                                                       | 원인                                                                         | 해결 방법                                                                                  |
-| --------------------------------------------------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| ✅ 임의의 `roomId`로 접근 시 메시지 전송 가능                   | `targetUserId`가 zustand에 남아 있어서 유효하지 않은 접근도 통과됨           | `roomId` 검증 로직 추가 및 초기 진입 시 상태 초기화 훅 작성 (`useClearDirectMessageStore`) |
-| ✅ 존재하지 않는 `roomId` 접근 시 방 생성되지 않음              | `GET /rooms/:roomId`에서 404 응답 발생 후 `catch` 블록에서 바로 리다이렉트됨 | 404 발생 시 유효한 유저인지 검증 후 `POST`로 방 생성 분기 추가                             |
-| ✅ 메시지 전송 시 무단 방 생성/등록 문제                        | 메시지 테이블과 방 테이블 간 외래키 미설정                                   | `messages.room_id` → `rooms.id` 외래키 설정으로 유효하지 않은 방 ID 차단                   |
-| ✅ 로그인 상태 변경 시 라우팅 반영 안됨                         | 동적 라우트(`/direct-message/:roomId`)에 대한 `router.refresh()` 미동작      | `usePathname`으로 경로 패턴 체크하여 safe path 포함되도록 처리                             |
-| ✅ 직접 URL 접근 시 `searchParams` 누락으로 방 진입 허용됨      | 클라이언트 `searchParams` 누락 시 서버에서 검증 불가                         | 서버에서 `currentUsername`, `targetUsername` 기반 `roomId` 검증 로직 추가                  |
-| ✅ Supabase Realtime 메시지 구독이 임의 방에서도 작동           | `useEffect`에서 roomId만 체크하고 유효성 검증 안함                           | `generateRoomId` 기반 비교하여 유효하지 않으면 구독 차단                                   |
-| ✅ `/direct-message/:roomId` 접근 시 로그아웃 리다이렉트 미동작 | 미들웨어 `matcher` 설정 누락                                                 | `matcher: '/direct-message/:path*'`로 설정 수정                                            |
+| 이슈/버그                                                                   | 원인                                                                         | 해결 방법                                                                                             |
+| --------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| ✅ 임의의 `roomId`로 접근 시 메시지 전송 가능                               | `targetUserId`가 zustand에 남아 있어서 유효하지 않은 접근도 통과됨           | `roomId` 검증 로직 추가 및 초기 진입 시 상태 초기화 훅 작성 (`useClearDirectMessageStore`)            |
+| ✅ 존재하지 않는 `roomId` 접근 시 방 생성되지 않음                          | `GET /rooms/:roomId`에서 404 응답 발생 후 `catch` 블록에서 바로 리다이렉트됨 | 404 발생 시 유효한 유저인지 검증 후 `POST`로 방 생성 분기 추가                                        |
+| ✅ 메시지 전송 시 무단 방 생성/등록 문제                                    | 메시지 테이블과 방 테이블 간 외래키 미설정                                   | `messages.room_id` → `rooms.id` 외래키 설정으로 유효하지 않은 방 ID 차단                              |
+| ✅ 로그인 상태 변경 시 라우팅 반영 안됨                                     | 동적 라우트(`/direct-message/:roomId`)에 대한 `router.refresh()` 미동작      | `usePathname`으로 경로 패턴 체크하여 safe path 포함되도록 처리                                        |
+| ✅ 직접 URL 접근 시 `searchParams` 누락으로 방 진입 허용됨                  | 클라이언트 `searchParams` 누락 시 서버에서 검증 불가                         | 서버에서 `currentUsername`, `targetUsername` 기반 `roomId` 검증 로직 추가                             |
+| ✅ Supabase Realtime 메시지 구독이 임의 방에서도 작동                       | `useEffect`에서 roomId만 체크하고 유효성 검증 안함                           | `generateRoomId` 기반 비교하여 유효하지 않으면 구독 차단                                              |
+| ✅ `/direct-message/:roomId` 접근 시 로그아웃 리다이렉트 미동작             | 미들웨어 `matcher` 설정 누락                                                 | `matcher: '/direct-message/:path*'`로 설정 수정                                                       |
+| ✅ 배포 후 카카오 로그인 시 `http:localhost:3000/`으로 리다이렉트 되는 문제 | Supabase Redirect URLs에 배포 주소 누락                                      | `Supabase - Authentication - URL Configuration` 내 `Site URL` 변경 및 `Redirect URLs`에 배포 URL 추가 |
 
 ### 📌 Backlog
 
