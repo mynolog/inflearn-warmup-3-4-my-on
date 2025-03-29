@@ -19,6 +19,7 @@ import { CreateUserDTO } from '@/types/dto/user'
 import { useDuplicationCheck } from '@/hooks/useDuplicationCheck'
 import { TABLES } from '@/constants/supabase'
 import { SIGNUP_MESSAGE } from '@/constants/zod'
+import { CONFIG_ERROR, SUPABASE_ERROR_MESSAGE } from '@/constants/error'
 
 export default function SignupForm() {
   const [isEmailVerified, setIsEmailVerified] = useState(false)
@@ -68,12 +69,26 @@ export default function SignupForm() {
 
   const signupMutation = useMutation({
     mutationFn: async ({ email, password, nickname }: Omit<SignupFormData, 'passwordConfirm'>) => {
+      const emailVerifyCallbackPath = process.env.NEXT_PUBLIC_EMAIL_VERIFY_CALLBACK_PATH
+      const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
+        ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+        : process.env.NEXT_PUBLIC_BASE_URL
+
+      if (!emailVerifyCallbackPath) {
+        throw new Error(CONFIG_ERROR.MISSING_EMAIL_VERIFY_CALLBACK_PATH.message)
+      }
+      if (!baseUrl) {
+        throw new Error(CONFIG_ERROR.MISSING_BASE_URL.message)
+      }
+
+      const emailRedirectTo = `${baseUrl}${emailVerifyCallbackPath}`
+
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           //TODO: 환경 변수 에러 핸들링 추가
-          emailRedirectTo: process.env.NEXT_PUBLIC_REDIRECT_URL,
+          emailRedirectTo: emailRedirectTo,
           data: {
             nickname,
           },
@@ -107,9 +122,9 @@ export default function SignupForm() {
       router.push(ROUTES.HOME)
     },
     onError: (error) => {
-      console.error('회원가입 실패: ', error.message)
+      console.error('[Email Signup Error]: ', error.message, error)
       if (error instanceof Error) {
-        if (error.message === 'email rate limit exceeded') {
+        if (error.message === SUPABASE_ERROR_MESSAGE.EMAIL_RATE_LIMIT_EXCEEDED) {
           toast.error(TOAST_MESSAGE.SYSTEM.TOO_MANY_REQUEST)
         } else {
           toast.error(TOAST_MESSAGE.AUTH.SIGNUP_FAILED)
@@ -120,7 +135,7 @@ export default function SignupForm() {
 
   const onSubmit = methods.handleSubmit((data) => {
     if (!emailStatus.available) {
-      toast.warn('이메일 중복 확인이 필요합니다.')
+      toast.warn(TOAST_MESSAGE.AUTH.EMAIL_CHECK_REQUIRED)
       return
     }
     signupMutation.mutate({

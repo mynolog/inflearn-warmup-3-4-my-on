@@ -6,6 +6,7 @@ import { useUserStore } from '@/stores/useUserStore'
 import { API_ENDPOINTS } from '@/constants/routes'
 import { UserResponseDTO } from '@/types/dto/user'
 import { toast } from 'react-toastify'
+import { TOAST_MESSAGE } from '@/constants/toastMessages'
 
 export default function UserInitializer() {
   const setUser = useUserStore((state) => state.setUser)
@@ -26,8 +27,10 @@ export default function UserInitializer() {
           avatarUrl,
         })
       } catch (error) {
-        console.error(error)
-        toast.error('유저 정보를 불러오지 못했습니다. 다시 시도해 주세요.')
+        if (error instanceof Error) {
+          console.error('[User Init Error]: ', error.message, error)
+          toast.error(TOAST_MESSAGE.SYSTEM.USER_INIT_FAILED)
+        }
       }
     }
     fetchUser()

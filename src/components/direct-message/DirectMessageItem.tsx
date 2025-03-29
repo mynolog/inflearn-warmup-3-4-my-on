@@ -5,10 +5,11 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useDirectMessageStore } from '@/stores/useDirectMessageStore'
 import { usePathname } from 'next/navigation'
+import { ROUTES } from '@/constants/routes'
 
 interface DirectMessageItemProps {
   user: UserResponseDTO
-  roomId?: string
+  roomId: string
   lastMessagePreview: string
 }
 
@@ -20,16 +21,12 @@ export default function DirectMessageItem({
   const pathname = usePathname()
   const { setCurrentRoomId, setTargetUserId, setTargetUsername, setTargetNickname } =
     useDirectMessageStore()
-  const isActive = pathname === `/direct-message/${roomId}`
-
-  if (!roomId) {
-    return
-  }
+  const isActive = pathname === `${ROUTES.DIRECT_MESSAGE}/${roomId}`
 
   return (
     <li key={user.id} className="flex w-full items-center gap-5">
       <Link
-        href={`/direct-message/${roomId}`}
+        href={`${ROUTES.DIRECT_MESSAGE}/${roomId}`}
         onClick={() => {
           setTargetUserId(user.id)
           setTargetUsername(user.username)

@@ -22,7 +22,7 @@ export default function DirectMessageList() {
 
   useEffect(() => {
     if (!currentUserId || !currentUsername || !users) return
-
+    // 전체 사용자 목록 조회(메시지 방이 DB에 존재하면 해당 데이터를 불러오고, 존재하지 않으면 동적URL 생성)
     const fetchRooms = async () => {
       const results = await Promise.all(
         users.map(async (user) => {
@@ -63,7 +63,7 @@ export default function DirectMessageList() {
     }
     fetchRooms()
   }, [currentUserId, currentUsername, users])
-
+  // 메시지 미리보기 용 구독
   useEffect(() => {
     if (!roomLinks.length) return
     const supabase = createBrowserSupabaseClient()
@@ -92,7 +92,7 @@ export default function DirectMessageList() {
         )
         .subscribe()
     })
-
+    // 구독 해제 클린업
     return () => {
       channels.forEach((channel) => supabase.removeChannel(channel))
     }
@@ -123,6 +123,8 @@ export default function DirectMessageList() {
               const matchedRoom = roomLinks.find((room) => room.userId === user.id)
               const roomId = matchedRoom?.roomId
               const lastMessagePreview = matchedRoom?.lastMessage ?? ''
+
+              if (!roomId) return null
 
               return (
                 <DirectMessageItem

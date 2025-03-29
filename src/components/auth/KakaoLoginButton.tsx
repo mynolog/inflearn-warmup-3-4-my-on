@@ -2,6 +2,9 @@
 
 import { createBrowserSupabaseClient } from '@/utils/supabase/client'
 import Button from '../common/button/Button'
+import { toast } from 'react-toastify'
+import { TOAST_MESSAGE } from '@/constants/toastMessages'
+import { CONFIG_ERROR } from '@/constants/error'
 
 interface StartWithKakakoButtonProps {
   className?: string
@@ -11,15 +14,31 @@ export default function StartWithKakaoButton({ className = '' }: StartWithKakako
   const supabase = createBrowserSupabaseClient()
 
   const signWithKakao = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    const kakaoCallbackPath = process.env.NEXT_PUBLIC_KAKAO_CALLBACK_PATH
+    const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
+      ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+      : process.env.NEXT_PUBLIC_BASE_URL
+
+    if (!kakaoCallbackPath) {
+      throw new Error(CONFIG_ERROR.MISSING_KAKAO_CALLBACK_PATH.message)
+    }
+    if (!baseUrl) {
+      throw new Error(CONFIG_ERROR.MISSING_BASE_URL.message)
+    }
+
+    const redirectTo = `${baseUrl}${kakaoCallbackPath}`
+
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: 'kakao',
       options: {
-        //TODO: kakao callback url 환경 변수로 관리
-        redirectTo: process.env.NEXT_PUBLIC_VERCEL_URL
-          ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/auth/oauth/kakao/callback`
-          : 'http://localhost:3000/auth/oauth/kakao/callback',
+        redirectTo: redirectTo,
       },
     })
+
+    if (error) {
+      console.error('[Kakao Error]: ', error.message, error)
+      toast.error(TOAST_MESSAGE.AUTH.KAKAO_FAILED)
+    }
   }
 
   const handleSignWithKakao = () => {

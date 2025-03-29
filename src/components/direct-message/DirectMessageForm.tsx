@@ -19,8 +19,16 @@ export default function DirectMessageForm({ roomId }: DirectMessageFormProps) {
   const [isSending, setIsSending] = useState(false)
 
   const handleSendMessage = async () => {
-    if (!message.trim() || isSending) return
+    const emptyText = !message.trim()
+    if (emptyText) {
+      toast.warn(TOAST_MESSAGE.DIRECT_MESSAGE.EMPTY_TEXT_SEND)
+      return
+    }
+    // 중복 메시지 발송 차단
+    if (isSending) return
+
     if (!currentUserId) {
+      toast.error(TOAST_MESSAGE.SYSTEM.UNAUTHORIZED)
       return
     }
 
@@ -36,8 +44,10 @@ export default function DirectMessageForm({ roomId }: DirectMessageFormProps) {
       })
       setMessage('')
     } catch (error) {
-      console.error(error)
-      toast.error(TOAST_MESSAGE.DIRECT_MESSAGE.ROOM_ACCESS_DENINED)
+      if (error instanceof Error) {
+        console.error('[Forbidden Error]: ', error.message, error)
+        toast.error(TOAST_MESSAGE.DIRECT_MESSAGE.ROOM_ACCESS_DENINED)
+      }
     } finally {
       setIsSending(false)
     }

@@ -13,6 +13,7 @@ import { createBrowserSupabaseClient } from '@/utils/supabase/client'
 import { ROUTES } from '@/constants/routes'
 import { toast } from 'react-toastify'
 import { TOAST_MESSAGE } from '@/constants/toastMessages'
+import { SUPABASE_ERROR_MESSAGE } from '@/constants/error'
 
 export default function LoginForm() {
   const router = useRouter()
@@ -36,18 +37,17 @@ export default function LoginForm() {
       return data
     },
     onSuccess: async () => {
-      router.push(ROUTES.HOME)
       toast.success(TOAST_MESSAGE.AUTH.LOGIN_SUCCESS)
+      router.push(ROUTES.HOME)
     },
     onError: (error) => {
+      console.error('[Email Login Error]: ', error.message, error)
       if (error instanceof Error) {
-        if (error.message === 'Email not confirmed') {
+        if (error.message === SUPABASE_ERROR_MESSAGE.EMAIL_NOT_CONFIRMED) {
           toast.warning(TOAST_MESSAGE.AUTH.EMAIL_NOT_VERIFIED)
-        } else if (error.message === 'Invalid login credentials') {
-          console.error(error)
+        } else if (error.message === SUPABASE_ERROR_MESSAGE.INVALID_LOGIN_CREDENTIALS) {
           toast.error(TOAST_MESSAGE.AUTH.LOGIN_FAILED)
         } else {
-          console.error(error)
           toast.error(TOAST_MESSAGE.AUTH.UNKNWON_ERROR)
         }
       }
