@@ -38,6 +38,22 @@ export async function POST(request: NextRequest) {
   try {
     const { id, userA_id, userB_id }: CreateRoomRequestDTO = await request.json()
 
+    const { data: existingRooms, error: fetchError } = await supabase
+      .from(TABLES.ROOMS)
+      .select('id')
+      .or(
+        `and(userA_id.eq.${userA_id},userB_id.eq.${userB_id}),and(userA_id.eq.${userB_id},userB_id.eq.${userA_id})`,
+      )
+
+    if (fetchError) {
+      console.error('Room check error:', fetchError)
+      return NextResponse.json({ message: 'Failed to check existing room' }, { status: 500 })
+    }
+
+    if (existingRooms.length > 0) {
+      return NextResponse.json({ message: 'Room already exists' }, { status: 200 })
+    }
+
     const { error } = await supabase.from(TABLES.ROOMS).insert({
       id,
       userA_id,

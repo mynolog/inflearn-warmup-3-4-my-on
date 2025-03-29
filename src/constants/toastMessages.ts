@@ -11,12 +11,18 @@ export const TOAST_MESSAGE = {
 
     UNKNWON_ERROR: '알 수 없는 오류가 발생했습니다.',
   },
+
   VALID: {
     EMAIL_AVAILABLE: '사용 가능한 이메일입니다.',
     NICKNAME_AVAILABLE: '사용 가능한 닉네임입니다.',
 
     EMAIL_TAKEN: '이미 사용 중인 이메일입니다.',
     KAKAO_EMAIL_TAKEN: '카카오 계정으로 가입된 이메일입니다.',
+  },
+
+  DIRECT_MESSAGE: {
+    ROOM_NOT_EXIST: '존재하지 않는 방입니다.',
+    ROOM_FETCH_ERROR: '방 정보를 불러오는 데 실패했습니다.',
   },
   SYSTEM: {
     UNKNWON_ERROR: '알 수 없는 오류가 발생했습니다.',

@@ -3,22 +3,26 @@
 import type { CreateRoomRequestDTO, RoomResponseDTO } from '@/types/dto/room'
 import type { MessageResponseDTO } from '@/types/dto/message'
 import { useEffect, useState, useRef } from 'react'
+import { useRouter } from 'next/navigation'
+import { HTTPError } from 'ky'
 import { kyInstance } from '@/lib/kyInstance'
 import { useUserStore } from '@/stores/useUserStore'
 import { useDirectMessageStore } from '@/stores/useDirectMessageStore'
-import { API_ENDPOINTS } from '@/constants/routes'
+import { API_ENDPOINTS, ROUTES } from '@/constants/routes'
 import DirectMessageForm from '@/components/direct-message/DirectMessageForm'
 import { createBrowserSupabaseClient } from '@/utils/supabase/client'
 import { TABLES } from '@/constants/supabase'
 import { formatToKoreanTime } from '@/utils/format'
 import Button from '@/components/common/button/Button'
 import { toast } from 'react-toastify'
+import { TOAST_MESSAGE } from '@/constants/toastMessages'
 
 interface DirectMessageRoomMainProps {
   roomId: string
 }
 
 export default function DirectMessageRoomMain({ roomId }: DirectMessageRoomMainProps) {
+  const router = useRouter()
   const { id: currentUserId } = useUserStore()
   const { targetUserId } = useDirectMessageStore()
   const [messages, setMessages] = useState<MessageResponseDTO[]>([])
@@ -68,12 +72,23 @@ export default function DirectMessageRoomMain({ roomId }: DirectMessageRoomMainP
           const { messages }: { messages: MessageResponseDTO[] } = await res.json()
           setMessages(messages)
         }
-      } catch (error) {
-        console.error(error)
+      } catch (error: unknown) {
+        if (error instanceof HTTPError) {
+          if (error.response.status === 404) {
+            toast.error(TOAST_MESSAGE.DIRECT_MESSAGE.ROOM_NOT_EXIST)
+          } else {
+            toast.error(TOAST_MESSAGE.DIRECT_MESSAGE.ROOM_FETCH_ERROR)
+          }
+        } else {
+          console.error('Unexpected error:', error)
+          toast.error(TOAST_MESSAGE.SYSTEM.UNKNWON_ERROR)
+        }
+        // 뒤로가기 방지
+        router.replace(ROUTES.DIRECT_MESSAGE)
       }
     }
     fetchRoomAndMessage()
-  }, [roomId, currentUserId, targetUserId])
+  }, [roomId, currentUserId, targetUserId, router])
 
   useEffect(() => {
     if (!roomId) return
@@ -132,6 +147,11 @@ export default function DirectMessageRoomMain({ roomId }: DirectMessageRoomMainP
 
   const handleDeleteMessage = async (messageId: string) => {
     await kyInstance.patch(`${API_ENDPOINTS.MESSAGE}/${messageId}`)
+    toast.warn('메시지가 삭제되었습니다.', {
+      autoClose: 2000,
+      position: 'top-right',
+      theme: 'dark',
+    })
   }
 
   return (
