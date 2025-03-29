@@ -70,9 +70,7 @@ export default function SignupForm() {
   const signupMutation = useMutation({
     mutationFn: async ({ email, password, nickname }: Omit<SignupFormData, 'passwordConfirm'>) => {
       const emailVerifyCallbackPath = process.env.NEXT_PUBLIC_EMAIL_VERIFY_CALLBACK_PATH
-      const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
-        ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-        : process.env.NEXT_PUBLIC_BASE_URL
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
 
       if (!emailVerifyCallbackPath) {
         throw new Error(CONFIG_ERROR.MISSING_EMAIL_VERIFY_CALLBACK_PATH.message)

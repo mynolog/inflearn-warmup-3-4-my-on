@@ -15,7 +15,7 @@ export const ERROR_RESPONSE = {
 export const CONFIG_ERROR = {
   MISSING_BASE_URL: {
     status: 500,
-    message: '환경변수 BASE_URL 또는 VERCEL_URL이 설정되지 않았습니다.',
+    message: '환경변수 BASE_URL이 설정되지 않았습니다.',
   },
   MISSING_KAKAO_CALLBACK_PATH: {
     status: 500,

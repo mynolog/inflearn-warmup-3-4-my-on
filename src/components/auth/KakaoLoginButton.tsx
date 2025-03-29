@@ -15,9 +15,7 @@ export default function StartWithKakaoButton({ className = '' }: StartWithKakako
 
   const signWithKakao = async () => {
     const kakaoCallbackPath = process.env.NEXT_PUBLIC_KAKAO_CALLBACK_PATH
-    const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
-      ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-      : process.env.NEXT_PUBLIC_BASE_URL
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
 
     if (!kakaoCallbackPath) {
       throw new Error(CONFIG_ERROR.MISSING_KAKAO_CALLBACK_PATH.message)
