@@ -4,6 +4,7 @@ import type { UserResponseDTO } from '@/types/dto/user'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useDirectMessageStore } from '@/stores/useDirectMessageStore'
+import { usePathname } from 'next/navigation'
 
 interface DirectMessageItemProps {
   user: UserResponseDTO
@@ -16,7 +17,10 @@ export default function DirectMessageItem({
   roomId,
   lastMessagePreview,
 }: DirectMessageItemProps) {
-  const { setCurrentRoomId, setTargetUserId } = useDirectMessageStore()
+  const pathname = usePathname()
+  const { setCurrentRoomId, setTargetUserId, setTargetUsername, setTargetNickname } =
+    useDirectMessageStore()
+  const isActive = pathname === `/direct-message/${roomId}`
 
   if (!roomId) {
     return
@@ -28,9 +32,11 @@ export default function DirectMessageItem({
         href={`/direct-message/${roomId}`}
         onClick={() => {
           setTargetUserId(user.id)
+          setTargetUsername(user.username)
+          setTargetNickname(user.nickname)
           setCurrentRoomId(roomId)
         }}
-        className={`flex w-full items-center justify-center gap-5 ${!roomId && 'pointer-events-none opacity-50'}`}
+        className={`duration-350 flex w-full items-center justify-center gap-5 rounded-lg p-2 ${!roomId && 'pointer-events-none opacity-50'} ${isActive && 'bg-gray-100 text-mint-800'}`}
       >
         <div className="h-12 w-12 overflow-hidden rounded-full">
           <Image

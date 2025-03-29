@@ -9,6 +9,16 @@ export async function POST(request: NextRequest) {
   const supabase = await createServerSupabaseClient()
 
   try {
+    const { data: room } = await supabase
+      .from(TABLES.ROOMS)
+      .select('userA_id, userB_id')
+      .eq('id', room_id)
+      .maybeSingle()
+
+    if (!room) {
+      return NextResponse.json({ error: '이 방에 메시지를 보낼 수 없습니다.' }, { status: 403 })
+    }
+
     const { data: insertedMessages, error: insertError } = await supabase
       .from(TABLES.MESSAGES)
       .insert({

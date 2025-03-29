@@ -1,10 +1,10 @@
 'use client'
 
-import type { LastMessage, RoomResponse } from '@/types/dto/room'
+import type { RoomResponse } from '@/types/dto/room'
 import { useEffect, useState } from 'react'
 import { useUsers } from '@/hooks/useUsers'
 import Skeleton from '../common/skeleton/Skeleton'
-import { generateRoomId } from '@/utils/random'
+import { generateRoomId } from '@/utils/generate'
 import { useUserStore } from '@/stores/useUserStore'
 import { kyInstance } from '@/lib/kyInstance'
 import DirectMessageItem from './DirectMessageItem'

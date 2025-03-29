@@ -23,8 +23,8 @@ interface DirectMessageRoomMainProps {
 
 export default function DirectMessageRoomMain({ roomId }: DirectMessageRoomMainProps) {
   const router = useRouter()
-  const { id: currentUserId } = useUserStore()
-  const { targetUserId } = useDirectMessageStore()
+  const { id: currentUserId, username: currentUsername } = useUserStore()
+  const { targetUserId, targetUsername, targetNickname } = useDirectMessageStore()
   const [messages, setMessages] = useState<MessageResponseDTO[]>([])
   const bottomRef = useRef<HTMLDivElement | null>(null)
   const scrollContainerRef = useRef<HTMLUListElement | null>(null)
@@ -53,11 +53,14 @@ export default function DirectMessageRoomMain({ roomId }: DirectMessageRoomMainP
   }, [messages])
 
   useEffect(() => {
-    if (!currentUserId || !targetUserId) return
+    if (!currentUserId || !targetUserId || !targetUsername) return
 
     const fetchRoomAndMessage = async () => {
       try {
-        const res = await kyInstance.get(`${API_ENDPOINTS.ROOMS}/${roomId}`)
+        const searchParams = new URLSearchParams({
+          targetUsername,
+        })
+        const res = await kyInstance.get(`${API_ENDPOINTS.ROOMS}/${roomId}?${searchParams}`)
         const { room }: { room: RoomResponseDTO | null } = await res.json()
 
         if (!room) {
@@ -74,6 +77,10 @@ export default function DirectMessageRoomMain({ roomId }: DirectMessageRoomMainP
         }
       } catch (error: unknown) {
         if (error instanceof HTTPError) {
+          if (error.response.status === 403) {
+            toast.error(TOAST_MESSAGE.DIRECT_MESSAGE.ROOM_FORBIDDEN)
+            router.push(ROUTES.DIRECT_MESSAGE)
+          }
           if (error.response.status === 404) {
             toast.error(TOAST_MESSAGE.DIRECT_MESSAGE.ROOM_NOT_EXIST)
           } else {
@@ -83,15 +90,14 @@ export default function DirectMessageRoomMain({ roomId }: DirectMessageRoomMainP
           console.error('Unexpected error:', error)
           toast.error(TOAST_MESSAGE.SYSTEM.UNKNWON_ERROR)
         }
-        // 뒤로가기 방지
-        router.replace(ROUTES.DIRECT_MESSAGE)
       }
     }
     fetchRoomAndMessage()
   }, [roomId, currentUserId, targetUserId, router])
 
   useEffect(() => {
-    if (!roomId) return
+    if (!currentUsername || !targetUsername || !targetNickname) return
+
     const supabase = createBrowserSupabaseClient()
 
     const channel = supabase
@@ -126,7 +132,7 @@ export default function DirectMessageRoomMain({ roomId }: DirectMessageRoomMainP
               scrollToBottom()
             } else {
               if (!isAtBottom()) {
-                toast.info(`새 메시지: ${updatedMessage.content}`, {
+                toast.info(`${targetNickname}: ${updatedMessage.content}`, {
                   position: 'top-right',
                   theme: 'dark',
                   onClick: () => scrollToBottom(),
@@ -143,7 +149,7 @@ export default function DirectMessageRoomMain({ roomId }: DirectMessageRoomMainP
     return () => {
       supabase.removeChannel(channel)
     }
-  }, [roomId])
+  }, [roomId, currentUsername, targetUsername])
 
   const handleDeleteMessage = async (messageId: string) => {
     await kyInstance.patch(`${API_ENDPOINTS.MESSAGE}/${messageId}`)
@@ -155,7 +161,10 @@ export default function DirectMessageRoomMain({ roomId }: DirectMessageRoomMainP
   }
 
   return (
-    <main className="flex h-screen w-full flex-col">
+    <main className="relative flex h-screen w-full flex-col">
+      <div className="flex h-10 w-full items-center justify-center border-b bg-gray-50 px-4 py-3">
+        <span className="text-xl font-semibold text-mint-800">{targetNickname}</span>
+      </div>
       <ul
         ref={scrollContainerRef}
         className="chat-scrollable flex-1 space-y-5 overflow-y-auto px-3 py-4"

@@ -1,7 +1,7 @@
 import type { CookieOptions } from '@supabase/ssr'
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
-import { EXACT_SAFE_PATHS, ROUTES } from '@/constants/routes'
+import { ROUTES } from '@/constants/routes'
 
 export const applyMiddlewareSupabaseClient = async (request: NextRequest) => {
   // 변경되지 않은 응답을 생성
@@ -100,5 +100,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: EXACT_SAFE_PATHS,
+  matcher: ['/', '/auth', '/auth/login', '/auth/signup', '/direct-message/:path*'],
 }

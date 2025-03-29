@@ -26,6 +26,8 @@ export const TOAST_MESSAGE = {
   DIRECT_MESSAGE: {
     ROOM_NOT_EXIST: '존재하지 않는 방입니다.',
     ROOM_FETCH_ERROR: '방 정보를 불러오는 데 실패했습니다.',
+    ROOM_FORBIDDEN: '이 방에 접근할 수 없습니다.',
+    ROOM_ACCESS_DENINED: '이 방에서 메시지를 전송할 수 없습니다.',
   },
   SYSTEM: {
     UNKNWON_ERROR: '알 수 없는 오류가 발생했습니다.',

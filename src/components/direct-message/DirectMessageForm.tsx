@@ -6,6 +6,8 @@ import { kyInstance } from '@/lib/kyInstance'
 import { API_ENDPOINTS } from '@/constants/routes'
 import { useUserStore } from '@/stores/useUserStore'
 import { CreateMessageRequestDTO } from '@/types/dto/message'
+import { toast } from 'react-toastify'
+import { TOAST_MESSAGE } from '@/constants/toastMessages'
 
 interface DirectMessageFormProps {
   roomId: string
@@ -32,10 +34,10 @@ export default function DirectMessageForm({ roomId }: DirectMessageFormProps) {
       await kyInstance.post(API_ENDPOINTS.MESSAGES, {
         json: payload,
       })
-      console.log('메시지 전송 완료')
       setMessage('')
     } catch (error) {
       console.error(error)
+      toast.error(TOAST_MESSAGE.DIRECT_MESSAGE.ROOM_ACCESS_DENINED)
     } finally {
       setIsSending(false)
     }

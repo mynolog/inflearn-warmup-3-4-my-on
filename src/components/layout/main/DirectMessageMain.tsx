@@ -1,4 +1,10 @@
+'use client'
+
+import { useClearDirectMessageStore } from '@/hooks/useClearDirectMessageStore'
+
 export default function DirectMessageMain() {
+  useClearDirectMessageStore()
+
   return (
     <main>
       <div className="flex h-screen w-full flex-col items-center justify-center gap-5">

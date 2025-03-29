@@ -7,6 +7,7 @@ import { TOAST_MESSAGE } from '@/constants/toastMessages'
 import { useUserStore } from '@/stores/useUserStore'
 import { createBrowserSupabaseClient } from '@/utils/supabase/client'
 import { toast } from 'react-toastify'
+import { useClearDirectMessageStore } from '@/hooks/useClearDirectMessageStore'
 
 export default function HomeMain() {
   const { nickname, clearUser } = useUserStore()
@@ -29,6 +30,8 @@ export default function HomeMain() {
       },
     )
   }
+
+  useClearDirectMessageStore()
 
   return (
     <main className="flex flex-col items-center justify-center gap-5">
