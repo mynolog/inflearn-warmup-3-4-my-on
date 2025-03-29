@@ -6,6 +6,8 @@ import { SIDEBAR_LIST } from '@/constants/sidebarList'
 import Button from '../common/button/Button'
 import { createBrowserSupabaseClient } from '@/utils/supabase/client'
 import { useUserStore } from '@/stores/useUserStore'
+import { toast } from 'react-toastify'
+import { TOAST_MESSAGE } from '@/constants/toastMessages'
 
 export default function SidebarNav() {
   const pathname = usePathname()
@@ -23,6 +25,12 @@ export default function SidebarNav() {
     await supabase.auth.signOut()
   }
 
+  const showUnavailableToast = () => {
+    toast.warn(TOAST_MESSAGE.SYSTEM.SERVICE_NOT_AVAILABLE, {
+      autoClose: 2000,
+    })
+  }
+
   return (
     <nav className="relative flex min-h-screen w-full flex-col items-center justify-start gap-20 py-6">
       {/* 홈 */}
@@ -32,16 +40,32 @@ export default function SidebarNav() {
             key={item.id}
             className="flex h-10 w-full justify-center rounded-lg px-3 hover:bg-gray-200"
           >
-            <Link href={item.href} className="flex h-full w-full items-center gap-2">
-              <i
-                className={`${isActive(item.href) ? `text-mint-600 ${item.iconClass.active}` : `font-bold text-gray-600 ${item.iconClass.default}`}`}
-              ></i>
-              <span
-                className={`${isActive(item.href) ? 'font-bold' : 'font-semibold text-gray-600'} hidden text-sm md:inline`}
+            {item.isAvailable ? (
+              <Link href={item.href} className="flex h-full w-full items-center gap-2">
+                <i
+                  className={`${isActive(item.href) ? `text-mint-600 ${item.iconClass.active}` : `font-bold text-gray-600 ${item.iconClass.default}`}`}
+                ></i>
+                <span
+                  className={`${isActive(item.href) ? 'font-bold' : 'font-semibold text-gray-600'} hidden text-sm md:inline`}
+                >
+                  {item.label}
+                </span>
+              </Link>
+            ) : (
+              <button
+                onClick={showUnavailableToast}
+                className="flex h-full w-full items-center gap-2"
               >
-                {item.label}
-              </span>
-            </Link>
+                <i
+                  className={`${isActive(item.href) ? `text-mint-600 ${item.iconClass.active}` : `font-bold text-gray-600 ${item.iconClass.default}`}`}
+                ></i>
+                <span
+                  className={`${isActive(item.href) ? 'font-bold' : 'font-semibold text-gray-600'} hidden text-sm md:inline`}
+                >
+                  {item.label}
+                </span>
+              </button>
+            )}
           </li>
         ))}
       </ul>
@@ -52,16 +76,32 @@ export default function SidebarNav() {
             key={item.id}
             className="flex h-10 w-full justify-center rounded-lg px-3 hover:bg-gray-200"
           >
-            <Link href={item.href} className="flex h-full w-full items-center gap-2">
-              <i
-                className={`${isActive(item.href) ? `text-mint-600 ${item.iconClass.active}` : `font-bold text-gray-600 ${item.iconClass.default}`}`}
-              ></i>
-              <span
-                className={`${isActive(item.href) ? 'font-bold' : 'font-semibold text-gray-600'} hidden text-sm md:inline`}
+            {item.isAvailable ? (
+              <Link href={item.href} className="flex h-full w-full items-center gap-2">
+                <i
+                  className={`${isActive(item.href) ? `text-mint-600 ${item.iconClass.active}` : `font-bold text-gray-600 ${item.iconClass.default}`}`}
+                ></i>
+                <span
+                  className={`${isActive(item.href) ? 'font-bold' : 'font-semibold text-gray-600'} hidden text-sm md:inline`}
+                >
+                  {item.label}
+                </span>
+              </Link>
+            ) : (
+              <button
+                onClick={showUnavailableToast}
+                className="flex h-full w-full items-center gap-2"
               >
-                {item.label}
-              </span>
-            </Link>
+                <i
+                  className={`${isActive(item.href) ? `text-mint-600 ${item.iconClass.active}` : `font-bold text-gray-600 ${item.iconClass.default}`}`}
+                ></i>
+                <span
+                  className={`${isActive(item.href) ? 'font-bold' : 'font-semibold text-gray-600'} hidden text-sm md:inline`}
+                >
+                  {item.label}
+                </span>
+              </button>
+            )}
           </li>
         ))}
       </ul>

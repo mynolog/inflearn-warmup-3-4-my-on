@@ -8,6 +8,7 @@ interface SidebarItem {
     default: string
     active: string
   }
+  isAvailable: boolean
   group: 'primary' | 'secondary'
 }
 
@@ -21,36 +22,40 @@ export const SIDEBAR_LIST: SidebarItem[] = [
       active: 'fa-solid fa-house',
     },
     group: 'primary',
+    isAvailable: true,
   },
   {
     id: 2000,
     label: '검색',
-    href: '#',
+    href: ROUTES.SEARCH,
     iconClass: {
       default: 'fa-solid fa-magnifying-glass',
       active: 'fa-solid fa-magnifying-glass',
     },
     group: 'secondary',
+    isAvailable: false,
   },
   {
     id: 3000,
     label: '알림',
-    href: '#',
+    href: ROUTES.NOTIFICATION,
     iconClass: {
       default: 'fa-regular fa-heart',
       active: 'fa-solid fa-heart',
     },
     group: 'secondary',
+    isAvailable: false,
   },
   {
     id: 4000,
     label: '만들기',
-    href: '#',
+    href: ROUTES.CREATE,
     iconClass: {
       default: 'fa-regular fa-square-plus',
       active: 'fa-solid fa-square-plus',
     },
     group: 'secondary',
+    isAvailable: false,
   },
   {
     id: 5000,
@@ -61,5 +66,6 @@ export const SIDEBAR_LIST: SidebarItem[] = [
       active: 'fa-solid fa-paper-plane',
     },
     group: 'secondary',
+    isAvailable: true,
   },
 ]

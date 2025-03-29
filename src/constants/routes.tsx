@@ -8,6 +8,11 @@ export const ROUTES = {
 
   // /direct-message
   DIRECT_MESSAGE: '/direct-message',
+
+  // 미구현 라우트
+  SEARCH: '/search',
+  NOTIFICATION: '/notification',
+  CREATE: '/create',
 } as const
 
 export const API_ENDPOINTS = {
