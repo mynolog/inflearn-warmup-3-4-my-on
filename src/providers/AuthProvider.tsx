@@ -1,8 +1,9 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { useEffect } from 'react'
 import { createBrowserSupabaseClient } from '@/utils/supabase/client'
+import { EXACT_SAFE_PATHS } from '@/constants/routes'
 
 export default function AuthProvider({
   accessToken,
@@ -13,18 +14,22 @@ export default function AuthProvider({
 }) {
   const supabase = createBrowserSupabaseClient()
   const router = useRouter()
+  const pathname = usePathname()
 
   useEffect(() => {
     const {
-      data: { subscription: authListner },
+      data: { subscription },
     } = supabase.auth.onAuthStateChange((_, session) => {
-      if (session?.access_token !== accessToken) {
+      const isSafePath = EXACT_SAFE_PATHS.includes(pathname)
+      const tokenChanged = session?.access_token !== accessToken
+
+      if (isSafePath && tokenChanged) {
         router.refresh()
       }
     })
-    return () => {
-      authListner.unsubscribe()
-    }
-  }, [accessToken, supabase, router])
+
+    return () => subscription.unsubscribe()
+  }, [accessToken, supabase, router, pathname])
+
   return children
 }

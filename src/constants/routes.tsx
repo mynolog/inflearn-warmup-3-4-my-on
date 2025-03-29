@@ -20,3 +20,5 @@ export const API_ENDPOINTS = {
   MESSAGES: 'api/messages',
   MESSAGE: 'api/message',
 } as const
+
+export const EXACT_SAFE_PATHS = ['/', '/auth', '/auth/login', '/auth/signup', '/direct-message']

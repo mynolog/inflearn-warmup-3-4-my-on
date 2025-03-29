@@ -1,7 +1,7 @@
 import type { CookieOptions } from '@supabase/ssr'
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
-import { ROUTES } from '@/constants/routes'
+import { EXACT_SAFE_PATHS, ROUTES } from '@/constants/routes'
 
 export const applyMiddlewareSupabaseClient = async (request: NextRequest) => {
   // 변경되지 않은 응답을 생성
@@ -100,8 +100,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    // 정적 파일 제외하고 모두 미들웨어 적용
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
-  ],
+  matcher: EXACT_SAFE_PATHS,
 }
