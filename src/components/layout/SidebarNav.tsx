@@ -22,7 +22,18 @@ export default function SidebarNav() {
 
   const handleSignout = async () => {
     clearUser()
-    await supabase.auth.signOut()
+    await toast.promise(
+      supabase.auth.signOut(),
+      {
+        pending: TOAST_MESSAGE.AUTH.SIGNOUT_PENDING,
+        success: TOAST_MESSAGE.AUTH.SIGNOUT_SUCCESS,
+        error: TOAST_MESSAGE.AUTH.SIGNOUT_FAILED,
+      },
+      {
+        autoClose: 2000,
+        theme: 'light',
+      },
+    )
   }
 
   const showUnavailableToast = () => {

@@ -3,8 +3,10 @@
 import UserInitializer from '@/components/auth/UserInitializer'
 import Button from '@/components/common/button/Button'
 import Skeleton from '@/components/common/skeleton/Skeleton'
+import { TOAST_MESSAGE } from '@/constants/toastMessages'
 import { useUserStore } from '@/stores/useUserStore'
 import { createBrowserSupabaseClient } from '@/utils/supabase/client'
+import { toast } from 'react-toastify'
 
 export default function HomeMain() {
   const { nickname, clearUser } = useUserStore()
@@ -14,7 +16,18 @@ export default function HomeMain() {
 
   const handleSignout = async () => {
     clearUser()
-    await supabase.auth.signOut()
+    await toast.promise(
+      supabase.auth.signOut(),
+      {
+        pending: TOAST_MESSAGE.AUTH.SIGNOUT_PENDING,
+        success: TOAST_MESSAGE.AUTH.SIGNOUT_SUCCESS,
+        error: TOAST_MESSAGE.AUTH.SIGNOUT_FAILED,
+      },
+      {
+        autoClose: 2000,
+        theme: 'light',
+      },
+    )
   }
 
   return (

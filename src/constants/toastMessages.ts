@@ -2,13 +2,16 @@ export const TOAST_MESSAGE = {
   AUTH: {
     SIGNUP_SUCCESS: '이메일 인증 링크가 발송되었습니다.',
     LOGIN_SUCCESS: '로그인에 성공했습니다.',
+    SIGNOUT_SUCCESS: '로그아웃되었습니다.',
 
     SIGNUP_FAILED: '회원가입에 실패했습니다. 잠시 후 다시 시도해주세요.',
     LOGIN_FAILED: '이메일 또는 비밀번호가 일치하지 않습니다.',
+    SIGNOUT_FAILED: '로그아웃 실패했습니다. 잠시 후 다시 시도해주세요.',
 
     EMAIL_NOT_VERIFIED: '이메일 인증이 필요합니다.',
     SIGNUP_EMAIL_SENT: '이메일 인증 링크가 발송되었습니다.',
 
+    SIGNOUT_PENDING: '로그아웃 중입니다..',
     UNKNWON_ERROR: '알 수 없는 오류가 발생했습니다.',
   },
 
