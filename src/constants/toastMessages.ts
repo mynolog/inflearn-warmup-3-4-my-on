@@ -15,6 +15,7 @@ export const TOAST_MESSAGE = {
     EMAIL_CHECK_REQUIRED: '이메일 중복 확인이 필요합니다.',
 
     SIGNOUT_PENDING: '로그아웃 중입니다..',
+    LOGIN_PENDING: '로그인 중입니다...',
     UNKNWON_ERROR: '알 수 없는 오류가 발생했습니다.',
   },
   VALID: {

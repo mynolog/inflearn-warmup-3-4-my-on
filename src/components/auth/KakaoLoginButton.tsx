@@ -39,8 +39,19 @@ export default function StartWithKakaoButton({ className = '' }: StartWithKakako
     }
   }
 
-  const handleSignWithKakao = () => {
-    signWithKakao()
+  const handleSignWithKakao = async () => {
+    await toast.promise(
+      signWithKakao(),
+      {
+        pending: TOAST_MESSAGE.AUTH.LOGIN_PENDING,
+        success: TOAST_MESSAGE.AUTH.LOGIN_SUCCESS,
+        error: TOAST_MESSAGE.AUTH.KAKAO_FAILED,
+      },
+      {
+        autoClose: 2000,
+        theme: 'light',
+      },
+    )
   }
 
   return (
