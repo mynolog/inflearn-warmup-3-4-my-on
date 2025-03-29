@@ -1,7 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server'
 import { createServerSupabaseClient } from '@/utils/supabase/server'
 import { TABLES } from '@/constants/supabase'
-import { generateRoomId } from '@/utils/generate'
 
 export async function GET(request: NextRequest, { params }: { params: { roomId: string } }) {
   const supabase = await createServerSupabaseClient()

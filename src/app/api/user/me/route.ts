@@ -31,5 +31,5 @@ export async function GET(_: NextRequest) {
     )
   }
 
-  return NextResponse.json(userData)
+  return NextResponse.json(userData, { status: 200 })
 }

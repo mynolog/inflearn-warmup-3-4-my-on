@@ -16,7 +16,7 @@ export async function GET(_: NextRequest) {
     )
   }
 
-  const { data, error } = await supabase.from(TABLES.USERS).select('*').neq('id', user.id)
+  const { data: users, error } = await supabase.from(TABLES.USERS).select('*').neq('id', user.id)
 
   if (error) {
     return NextResponse.json(
@@ -25,5 +25,5 @@ export async function GET(_: NextRequest) {
     )
   }
 
-  return NextResponse.json(data, { status: 200 })
+  return NextResponse.json(users, { status: 200 })
 }
