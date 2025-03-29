@@ -100,5 +100,12 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/', '/auth', '/auth/login', '/auth/signup', '/direct-message/:path*'],
+  matcher: [
+    '/',
+    '/auth',
+    '/auth/login',
+    '/auth/signup',
+    '/auth/signup/callback',
+    '/direct-message/:path*',
+  ],
 }

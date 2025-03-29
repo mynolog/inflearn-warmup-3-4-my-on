@@ -1,7 +1,6 @@
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import { applyMiddlewareSupabaseClient } from './app/middleware'
-import { EXACT_SAFE_PATHS } from './constants/routes'
 
 export async function middleware(request: NextRequest) {
   try {
@@ -13,5 +12,12 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/', '/auth', '/auth/login', '/auth/signup', '/direct-message/:path*'],
+  matcher: [
+    '/',
+    '/auth',
+    '/auth/login',
+    '/auth/signup',
+    '/auth/signup/callback',
+    '/direct-message/:path*',
+  ],
 }
