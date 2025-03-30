@@ -3,6 +3,7 @@
 ### 📌 프로젝트 개요
 
 - 이 프로젝트는 **인프런 워밍업 클럽 3기 풀스택 4주차 과제**로 제출된 MyOn 앱입니다.
+- 강의 코드에 의존하지 않고, 스타일과 컴포넌트 구조를 전면적으로 재구성하며, 기능뿐 아니라 사용자 경험과 유지보수성까지 고려한 구현을 목표로 했습니다.
 
 ### ✨ 주요 기능
 
@@ -33,13 +34,9 @@ pnpm install
 pnpm run dev
 ```
 
-### 🎥 데모 영상
+### 🚀 배포
 
-<!-- #### 👉 [유튜브 링크](https://www.youtube.com/watch?v=o5BwgEixAbE)
-
-[![유튜브 썸네일](https://img.youtube.com/vi/o5BwgEixAbE/0.jpg)](https://www.youtube.com/watch?v=o5BwgEixAbE) -->
-
-### 🚀 배포 링크
+#### 👉 [배포 링크](https://myon.mynolog.me/)
 
 ### 🧳 기술 스택
 
